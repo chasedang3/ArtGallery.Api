@@ -14,8 +14,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<CloudinaryService>();
 
-var app = builder.Build();
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFE", policy =>
@@ -26,6 +24,8 @@ builder.Services.AddCors(options =>
             .WithOrigins("http://localhost:4200");
     });
 });
+
+var app = builder.Build();
 
 app.UseCors("AllowFE");
 
