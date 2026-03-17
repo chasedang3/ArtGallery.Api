@@ -16,6 +16,19 @@ builder.Services.AddScoped<CloudinaryService>();
 
 var app = builder.Build();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFE", policy =>
+    {
+        policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .WithOrigins("http://localhost:4200");
+    });
+});
+
+app.UseCors("AllowFE");
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
