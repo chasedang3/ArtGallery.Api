@@ -1,0 +1,19 @@
+# Visual Studio
+.vs/
+bin/
+obj/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# User-specific
+*.user
+*.suo
+
+# ASP.NET Core
+appsettings.Development.json
+
+# OS
+Thumbs.db
+.DS_Store
