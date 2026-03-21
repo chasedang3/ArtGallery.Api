@@ -12,7 +12,7 @@ public class Artwork
     public string Type { get; set; } = string.Empty;
 
     public bool IsAvailable { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     public ICollection<ArtworkCategory> ArtworkCategories { get; set; }
         = new List<ArtworkCategory>();

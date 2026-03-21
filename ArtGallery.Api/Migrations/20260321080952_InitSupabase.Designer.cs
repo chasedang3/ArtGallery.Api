@@ -3,6 +3,7 @@ using System;
 using ArtGallery.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,13 +12,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ArtGallery.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260321080952_InitSupabase")]
+    partial class InitSupabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("public")
                 .HasAnnotation("ProductVersion", "9.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -64,7 +66,7 @@ namespace ArtGallery.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("artworks", "public");
+                    b.ToTable("artworks", (string)null);
                 });
 
             modelBuilder.Entity("ArtGallery.Api.Entities.ArtworkCategory", b =>
@@ -81,7 +83,7 @@ namespace ArtGallery.Api.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("artwork_categories", "public");
+                    b.ToTable("artwork_categories", (string)null);
                 });
 
             modelBuilder.Entity("ArtGallery.Api.Entities.Category", b =>
@@ -107,7 +109,7 @@ namespace ArtGallery.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("categories", "public");
+                    b.ToTable("categories", (string)null);
                 });
 
             modelBuilder.Entity("ArtGallery.Api.Entities.ArtworkCategory", b =>

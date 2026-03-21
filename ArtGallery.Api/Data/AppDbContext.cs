@@ -16,6 +16,9 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("public");
+        base.OnModelCreating(modelBuilder);
+
         // ---------- ARTWORK ----------
         modelBuilder.Entity<Artwork>(entity =>
         {
