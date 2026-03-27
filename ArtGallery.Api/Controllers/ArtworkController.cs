@@ -52,6 +52,7 @@ namespace ArtGallery.Api.Controllers
                         CreatedAt = a.CreatedAt,
                         ImageUrl = a.ImageUrl,
                         Type = a.Type,
+                        Price = a.Price,
                         Categories = a.ArtworkCategories
                             .Select(ac => new CategoryDto
                             {
@@ -80,6 +81,7 @@ namespace ArtGallery.Api.Controllers
                     CreatedAt = a.CreatedAt,
                     ImageUrl = a.ImageUrl,
                     Type = a.Type,
+                    Price = a.Price,
                     Categories = a.ArtworkCategories
                         .Select(ac => new CategoryDto
                         {
