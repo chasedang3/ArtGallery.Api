@@ -44,17 +44,50 @@ namespace ArtGallery.Api.Controllers
             {
                 var list = await query
                     .OrderByDescending(a => a.CreatedAt)
+                    .Select(a => new ArtworkListDto
+                    {
+                        Id = a.Id,
+                        Title = a.Title,
+                        Description = a.Description,
+                        CreatedAt = a.CreatedAt,
+                        ImageUrl = a.ImageUrl,
+                        Type = a.Type,
+                        Categories = a.ArtworkCategories
+                            .Select(ac => new CategoryDto
+                            {
+                                Id = ac.Category.Id,
+                                Name = ac.Category.Name
+                            })
+                            .ToList()
+                    })
                     .ToListAsync();
 
                 return Ok(list);
             }
 
+            // ===== PAGING =====
             var totalItems = await query.CountAsync();
 
             var artworks = await query
                 .OrderByDescending(a => a.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
+                .Select(a => new ArtworkListDto
+                {
+                    Id = a.Id,
+                    Title = a.Title,
+                    Description = a.Description,
+                    CreatedAt = a.CreatedAt,
+                    ImageUrl = a.ImageUrl,
+                    Type = a.Type,
+                    Categories = a.ArtworkCategories
+                        .Select(ac => new CategoryDto
+                        {
+                            Id = ac.Category.Id,
+                            Name = ac.Category.Name
+                        })
+                        .ToList()
+                })
                 .ToListAsync();
 
             return Ok(new
@@ -69,14 +102,27 @@ namespace ArtGallery.Api.Controllers
 
         // GET: api/artworks/{id}
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<Artwork>> GetArtwork(Guid id)
+        public async Task<ActionResult> GetArtwork(Guid id)
         {
-            var artwork = await _context.Artworks.FindAsync(id);
+            var artwork = await _context.Artworks
+                            .Include(a => a.ArtworkCategories)
+                            .ThenInclude(ac => ac.Category)
+                            .FirstOrDefaultAsync(a => a.Id == id);
 
-            if (artwork == null)
-                return NotFound();
-
-            return Ok(artwork);
+            return Ok(new ArtworkDto
+            {
+                Id = artwork.Id,
+                Title = artwork.Title,
+                Description = artwork.Description,
+                Price = artwork.Price,
+                ImageUrl = artwork.ImageUrl,
+                Categories = artwork.ArtworkCategories
+                    .Select(ac => new CategoryDto
+                    {
+                        Id = ac.Category.Id,
+                        Name = ac.Category.Name
+                    }).ToList()
+            });
         }
 
         // POST: api/artworks
