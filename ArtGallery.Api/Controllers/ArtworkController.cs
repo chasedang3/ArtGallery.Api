@@ -18,12 +18,14 @@ namespace ArtGallery.Api.Controllers
         }
 
         // GET: api/artworks
-        // Supports paging, search, all=true
+        // Supports paging, search, category filter, type filter, all=true
         [HttpGet]
         public async Task<IActionResult> GetArtworks(
             int page = 1,
             int pageSize = 12,
             string? search = null,
+            Guid? categoryId = null,
+            ArtworkType? type = null,
             bool all = false
         )
         {
@@ -38,6 +40,18 @@ namespace ArtGallery.Api.Controllers
                     EF.Functions.Like(a.Title ?? "", $"%{search}%") ||
                     EF.Functions.Like(a.Description ?? "", $"%{search}%")
                 );
+            }
+
+            if (categoryId.HasValue)
+            {
+                query = query.Where(a =>
+                    a.ArtworkCategories.Any(ac => ac.CategoryId == categoryId.Value)
+                );
+            }
+
+            if (type.HasValue)
+            {
+                query = query.Where(a => a.Type == type.Value);
             }
 
             if (all)

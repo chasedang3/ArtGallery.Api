@@ -9,7 +9,7 @@ public class Artwork
     public decimal Price { get; set; }
 
     public string ImageUrl { get; set; } = string.Empty;
-    public string Type { get; set; } = string.Empty;
+    public ArtworkType Type { get; set; } = ArtworkType.Canvas;
 
     public bool IsAvailable { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now;

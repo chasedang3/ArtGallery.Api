@@ -31,7 +31,7 @@ public class AppDbContext : DbContext
             entity.Property(a => a.Description).HasColumnName("description");
             entity.Property(a => a.Price).HasColumnName("price");
             entity.Property(a => a.ImageUrl).HasColumnName("image_url");
-            entity.Property(a => a.Type).HasColumnName("type");
+            entity.Property(a => a.Type).HasColumnName("type").HasConversion<string>().IsRequired();
             entity.Property(a => a.IsAvailable).HasColumnName("is_available");
             entity.Property(a => a.CreatedAt).HasColumnName("created_at");
         });

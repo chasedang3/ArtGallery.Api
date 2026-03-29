@@ -1,4 +1,6 @@
-﻿namespace ArtGallery.Api.DTOs;
+﻿using ArtGallery.Api.Entities;
+
+namespace ArtGallery.Api.DTOs;
 
 public class ArtworkCreateUpdateDto
 {
@@ -9,7 +11,7 @@ public class ArtworkCreateUpdateDto
     public string ImageUrl { get; set; } = string.Empty;
 
     // canvas | oil
-    public string Type { get; set; } = string.Empty;
+    public ArtworkType Type { get; set; } = ArtworkType.Canvas;
 
     public bool IsAvailable { get; set; }
 
