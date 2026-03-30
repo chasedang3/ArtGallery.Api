@@ -125,6 +125,9 @@ namespace ArtGallery.Api.Controllers
                             .ThenInclude(ac => ac.Category)
                             .FirstOrDefaultAsync(a => a.Id == id);
 
+            if (artwork == null)
+                return NotFound();
+
             return Ok(new ArtworkDto
             {
                 Id = artwork.Id,
@@ -145,6 +148,21 @@ namespace ArtGallery.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateArtwork([FromBody] ArtworkCreateUpdateDto dto)
         {
+            // Defensive: normalize incoming category ids
+            var incomingCategoryIds = dto.CategoryIds ?? new List<Guid>();
+            var distinctIncomingCategoryIds = incomingCategoryIds.Distinct().ToList();
+
+            // Validate categories exist
+            var validCategoryIds = await _context.Categories
+                .Where(c => distinctIncomingCategoryIds.Contains(c.Id))
+                .Select(c => c.Id)
+                .ToListAsync();
+
+            if (validCategoryIds.Count != distinctIncomingCategoryIds.Count)
+            {
+                return BadRequest("One or more categories are invalid");
+            }
+
             var artwork = new Artwork
             {
                 Id = Guid.NewGuid(),
@@ -154,21 +172,11 @@ namespace ArtGallery.Api.Controllers
                 ImageUrl = dto.ImageUrl,
                 Type = dto.Type,
                 IsAvailable = dto.IsAvailable,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                ArtworkCategories = new List<ArtworkCategory>()
             };
 
-            var validCategoryIds = await _context.Categories
-                .Where(c => dto.CategoryIds.Contains(c.Id))
-                .Select(c => c.Id)
-                .ToListAsync();
-
-            if (validCategoryIds.Count != dto.CategoryIds.Count)
-            {
-                return BadRequest("One or more categories are invalid");
-            }
-
-            // gán category
-            foreach (var categoryId in dto.CategoryIds)
+            foreach (var categoryId in validCategoryIds)
             {
                 artwork.ArtworkCategories.Add(new ArtworkCategory
                 {
@@ -180,7 +188,7 @@ namespace ArtGallery.Api.Controllers
             _context.Artworks.Add(artwork);
             await _context.SaveChangesAsync();
 
-            return Ok(artwork);
+            return CreatedAtAction(nameof(GetArtwork), new { id = artwork.Id }, new { id = artwork.Id });
         }
 
         // PUT: api/artworks/{id}
@@ -204,7 +212,15 @@ namespace ArtGallery.Api.Controllers
             // cập nhật category
             artwork.ArtworkCategories.Clear();
 
-            foreach (var categoryId in dto.CategoryIds)
+            var incomingCategoryIds = dto.CategoryIds ?? new List<Guid>();
+            var distinctIncomingCategoryIds = incomingCategoryIds.Distinct().ToList();
+
+            var validCategoryIds = await _context.Categories
+                .Where(c => distinctIncomingCategoryIds.Contains(c.Id))
+                .Select(c => c.Id)
+                .ToListAsync();
+
+            foreach (var categoryId in validCategoryIds)
             {
                 artwork.ArtworkCategories.Add(new ArtworkCategory
                 {
