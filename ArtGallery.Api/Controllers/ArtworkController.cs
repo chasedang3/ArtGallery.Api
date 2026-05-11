@@ -134,6 +134,7 @@ namespace ArtGallery.Api.Controllers
                 Title = artwork.Title,
                 Description = artwork.Description,
                 Price = artwork.Price,
+                Type = artwork.Type,
                 ImageUrl = artwork.ImageUrl,
                 Categories = artwork.ArtworkCategories
                     .Select(ac => new CategoryDto

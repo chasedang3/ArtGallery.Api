@@ -1,4 +1,6 @@
-﻿namespace ArtGallery.Api.DTOs
+﻿using ArtGallery.Api.Entities;
+
+namespace ArtGallery.Api.DTOs
 {
     public class ArtworkDto
     {
@@ -7,6 +9,7 @@
         public string? Description { get; set; }
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
+        public ArtworkType Type { get; set; } = ArtworkType.Canvas;
         public List<CategoryDto> Categories { get; set; } = [];
     }
 }
